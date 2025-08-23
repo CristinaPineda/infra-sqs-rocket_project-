@@ -18,3 +18,8 @@ variable "aws_region" {
   type        = string
   default     = "sa-east-1"
 }
+
+variable "sns_topic_name" {
+  description = "The name of the SNS topic."
+  type        = string
+}
