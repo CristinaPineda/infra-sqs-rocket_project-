@@ -6,3 +6,34 @@ resource "aws_sqs_queue" "rocket_project_sqs" {
     Environment = var.environment
   }
 }
+
+resource "aws_sqs_queue_policy" "rocket_project_sqs_policy" {
+  queue_url = aws_sqs_queue.rocket_project_sqs.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Id      = "sqs_policy_for_sns",
+    Statement = [
+      {
+        Sid    = "AllowSNSTopicToPublish",
+        Effect = "Allow",
+        Principal = {
+          Service = "sns.amazonaws.com"
+        },
+        Action = "sqs:SendMessage",
+        Resource = aws_sqs_queue.rocket_project_sqs.arn,
+        Condition = {
+          ArnEquals = {
+            "aws:SourceArn" = var.sns_topic_arn
+          }
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_sns_topic_subscription" "sns_sqs_subscription" {
+  topic_arn = var.sns_topic_arn
+  protocol  = "sqs"
+  endpoint  = aws_sqs_queue.rocket_project_sqs.arn
+}
