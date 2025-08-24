@@ -1,5 +1,6 @@
 aws_sqs_queue_name = "rocket-project-prod-sqs-queue"
 sns_topic_name     = "rocket-project-prod-sns-topic"
+sns_topic_arn      = "arn:aws:sns:sa-east-1:063630845645:rocket-project-prod-sns-topic"
 project_name       = "rocket-project"
 environment        = "prod"
 aws_region         = "sa-east-1"
