@@ -1,14 +1,3 @@
-# sns.tf
-
-resource "aws_sqs_queue" "rocket_project_sqs_queue" {
-  name = var.aws_sqs_queue_name
-
-  tags = {
-    Project = var.project_name
-    Environment = var.environment
-  }
-}
-
 # 1. DATA SOURCE: Busca o tópico SNS existente
 # O Terraform vai procurar por um tópico com o nome especificado.
 data "aws_sns_topic" "sns_topic" {
@@ -16,15 +5,15 @@ data "aws_sns_topic" "sns_topic" {
 }
 
 # 2. Cria a fila SQS
+# O nome da fila foi corrigido para usar a variável 'aws_sqs_queue_name'
 resource "aws_sqs_queue" "sns_target_queue" {
-  name = "${var.project_name}-${var.environment}-sns-queue"
+  name = var.aws_sqs_queue_name
 
   tags = {
-    Project     = var.project_name
+    Project = var.project_name
     Environment = var.environment
   }
 }
-
 # 3. Cria a política de permissões para a fila SQS
 # Esta política permite que o tópico SNS envie mensagens para esta fila.
 resource "aws_sqs_queue_policy" "sns_sqs_policy" {
