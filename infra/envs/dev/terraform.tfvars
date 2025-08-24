@@ -1,0 +1,5 @@
+aws_sqs_queue_name = "rocket-project-dev-sqs-queue"
+sns_topic_name     = "rocket-project-dev-sns-topic"
+project_name       = "rocket-project"
+environment        = "dev"
+aws_region         = "sa-east-1"
