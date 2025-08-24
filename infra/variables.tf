@@ -23,3 +23,8 @@ variable "sns_topic_name" {
   description = "The name of the SNS topic."
   type        = string
 }
+
+variable "sns_topic_arn" {
+  description = "O ARN do tópico SNS para assinatura."
+  type        = string
+}
