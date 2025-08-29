@@ -28,3 +28,8 @@ variable "sns_topic_arn" {
   description = "O ARN do tópico SNS para assinatura."
   type        = string
 }
+
+variable "lambda_function_name" {
+  description = "The name of the Lambda function."
+  type        = string
+}
