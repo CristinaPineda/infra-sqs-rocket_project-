@@ -1,5 +1,5 @@
 resource "aws_sqs_queue" "rocket_project_sqs" {
-  name = var.aws_sqs_queue_name
+  name = var.aws_sqs_queue
 
   tags = {
     Project     = var.project_name
@@ -38,8 +38,8 @@ resource "aws_sns_topic_subscription" "sns_sqs_subscription" {
   endpoint  = aws_sqs_queue.rocket_project_sqs.arn
 }
 
+data "aws_caller_identity" "current" {}
 
-# Política da fila que permite que a sua Lambda leia da fila
 resource "aws_sqs_queue_policy" "lambda_permission" {
   queue_url = aws_sqs_queue.rocket_project_sqs.id
 
@@ -58,7 +58,7 @@ resource "aws_sqs_queue_policy" "lambda_permission" {
           "sqs:DeleteMessage",
           "sqs:GetQueueAttributes"
         ],
-        Resource = aws_sqs_queue.source_queue.arn,
+        Resource = aws_sqs_queue.rocket_project_sqs.arn,
         Condition = {
           ArnEquals = {
             "aws:SourceArn" = "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:function:${var.lambda_function_name}"

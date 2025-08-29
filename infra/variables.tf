@@ -1,4 +1,4 @@
-variable "aws_sqs_queue_name" {
+variable "aws_sqs_queue" {
   description = "The name of the SQS queue."
   type        = string
 }
