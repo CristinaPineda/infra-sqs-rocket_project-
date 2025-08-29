@@ -23,8 +23,12 @@ resource "aws_sqs_queue_policy" "rocket_project_sqs_policy" {
         Action = "sqs:SendMessage",
         Resource = aws_sqs_queue.rocket_project_sqs.arn,
         Condition = {
+          # Boa prática de segurança: garante que a origem é do seu tópico E da sua conta
           ArnEquals = {
             "aws:SourceArn" = var.sns_topic_arn
+          },
+          StringEquals = {
+            "aws:SourceAccount" = data.aws_caller_identity.current.account_id
           }
         }
       }
@@ -60,8 +64,9 @@ resource "aws_sqs_queue_policy" "lambda_permission" {
         ],
         Resource = aws_sqs_queue.rocket_project_sqs.arn,
         Condition = {
-          ArnEquals = {
-            "aws:SourceArn" = "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:function:${var.lambda_function_name}"
+          # Use o ID da sua conta como condição de segurança
+          StringEquals = {
+            "aws:SourceAccount" = data.aws_caller_identity.current.account_id
           }
         }
       }
