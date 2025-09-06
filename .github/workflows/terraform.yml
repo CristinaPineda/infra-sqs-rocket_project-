@@ -24,7 +24,7 @@ on:
       destroy:
         type: boolean
         required: false
-        default: false
+        default: true
         description: "Define se o comando 'terraform destroy' deve ser executado (true para destruir, false para plan/apply)"
 
 jobs:
@@ -69,13 +69,12 @@ jobs:
         id: terraform-destroy
         run: |
           cd infra && \
-          terraform workspace select -or-create ${{ inputs.environment }} && \ 
+          terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} && \
           terraform destroy \
             -var="environment=${{ inputs.environment }}" \
-            -var-file="envs/${{ inputs.environment }}/terraform.tfvars" \ 
+            -var-file="envs/${{ inputs.environment }}/terraform.tfvars" \
             -auto-approve \
             -lock=false
-
       - name: Terraform Plan
         if: inputs.destroy == false
         id: terraform-plan
