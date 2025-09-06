@@ -69,13 +69,12 @@ jobs:
         id: terraform-destroy
         run: |
           cd infra && \
-          terraform workspace select ${{ inputs.environment }} && \ 
+          terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} && \
           terraform destroy \
             -var="environment=${{ inputs.environment }}" \
-            -var-file="envs/${{ inputs.environment }}/terraform.tfvars" \ 
+            -var-file="envs/${{ inputs.environment }}/terraform.tfvars" \
             -auto-approve \
             -lock=false
-
       - name: Terraform Plan
         if: inputs.destroy == false
         id: terraform-plan
