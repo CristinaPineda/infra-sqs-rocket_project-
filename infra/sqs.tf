@@ -1,10 +1,10 @@
 # 1. Recurso da Dead-Letter Queue (DLQ)
 resource "aws_sqs_queue" "dlq" {
-  name                      = "rocket_project_sqs_dlq"
+  name                      = "${var.project_name}-${var.environment}-sqs-dlq"
   message_retention_seconds = 1209600 # 14 dias
   tags = {
-    Project     = "rocket_project"
-    Environment = "dev"
+    Project     = var.project_name
+    Environment = var.environment
   }
 }
 
