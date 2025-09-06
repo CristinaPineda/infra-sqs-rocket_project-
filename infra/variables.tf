@@ -1,4 +1,4 @@
-variable "aws_sqs_queue_name" {
+variable "aws_sqs_queue" {
   description = "The name of the SQS queue."
   type        = string
 }
@@ -26,5 +26,10 @@ variable "sns_topic_name" {
 
 variable "sns_topic_arn" {
   description = "O ARN do tópico SNS para assinatura."
+  type        = string
+}
+
+variable "lambda_function_name" {
+  description = "The name of the Lambda function."
   type        = string
 }
