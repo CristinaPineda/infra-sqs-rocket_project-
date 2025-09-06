@@ -69,7 +69,7 @@ jobs:
         id: terraform-destroy
         run: |
           cd infra && \
-          terraform workspace select -or-create ${{ inputs.environment }} && \ 
+          terraform workspace select ${{ inputs.environment }} && \ 
           terraform destroy \
             -var="environment=${{ inputs.environment }}" \
             -var-file="envs/${{ inputs.environment }}/terraform.tfvars" \ 
