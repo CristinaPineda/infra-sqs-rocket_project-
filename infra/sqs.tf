@@ -6,6 +6,29 @@ resource "aws_sqs_queue" "rocket_project_sqs" {
     Environment = var.environment
   }
 }
+resource "aws_sqs_queue" "dlq" {
+  name                      = "rocket_project_sqs_dlq"
+  message_retention_seconds = 1209600 # 14 dias
+  tags = {
+    Project     = "rocket_project"
+    Environment = "dev"
+  }
+}
+
+# Modifica a fila SQS principal para incluir a DLQ
+resource "aws_sqs_queue" "source_queue" {
+  name = "rocket_project_sqs"
+
+  # Adiciona a política de redirecionamento para a DLQ
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.dlq.arn
+    maxReceiveCount     = 5 # O número de falhas antes de mover para a DLQ
+  })
+  tags = {
+    Project     = "rocket_project"
+    Environment = "dev"
+  }
+}
 
 resource "aws_sqs_queue_policy" "rocket_project_sqs_policy" {
   queue_url = aws_sqs_queue.rocket_project_sqs.id
@@ -58,3 +81,4 @@ resource "aws_sns_topic_subscription" "sns_sqs_subscription" {
 }
 
 data "aws_caller_identity" "current" {}
+
